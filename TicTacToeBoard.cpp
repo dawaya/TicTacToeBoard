@@ -19,11 +19,11 @@ TicTacToeBoard::TicTacToeBoard()
 **/
 Piece TicTacToeBoard::toggleTurn()
 {
-  return turn;
-  if(turn != O)
-    return O;
+  if(turn == X)
+    turn = O;
   else
-    return X;
+    turn = X;
+  return turn;
 }
 
 /**
@@ -37,7 +37,17 @@ Piece TicTacToeBoard::toggleTurn()
 **/ 
 Piece TicTacToeBoard::placePiece(int row, int column)
 {
-  return Invalid;
+  if(row>2 || column>2)
+    return Invalid;
+  else if(board[row][column] == Blank){
+    board[row][column] = turn;
+    Piece placed = turn;
+    toggleTurn();
+    return placed;
+  }
+  else{
+    return board[row][column];
+  }
 }
 
 /**
@@ -46,7 +56,12 @@ Piece TicTacToeBoard::placePiece(int row, int column)
 **/
 Piece TicTacToeBoard::getPiece(int row, int column)
 {
-  return Invalid;
+  if(row > 2 || column > 2)
+    return Invalid;
+  else if(board[row][column] == Blank)
+    return Blank;
+  else
+   return board[row][column];
 }
 
 /**
@@ -55,5 +70,37 @@ Piece TicTacToeBoard::getPiece(int row, int column)
 **/
 Piece TicTacToeBoard::getWinner()
 {
-  return Invalid;
+  //win horizontal
+  if((board[0][0] == board[0][1]) && (board[0][0] == board[0][2]) && (board[0][0] != Blank))
+    return board[0][0];
+  else if((board[1][0] == board[1][1]) && (board[1][0] == board[1][2]) && (board[1][0] != Blank))
+    return board[1][0];
+  else if((board[2][0] == board[2][1]) && (board[2][0] == board[2][2]) && (board[2][0] != Blank))
+    return board[2][0];
+      
+  //win vertical
+  else if((board[0][0] == board[1][0]) && (board[0][0] == board[2][0]) && (board[0][0] != Blank))
+    return board[0][0];
+  else if((board[0][1] == board[1][1]) && (board[0][1] == board[2][1]) && (board[0][1] != Blank))
+    return board[0][1];
+  else if((board[0][2] == board[1][2]) && (board[0][2] == board[2][2]) && (board[0][2] != Blank))
+    return board[0][2];
+  
+  //win diagonally
+  else if((board[0][0] == board[1][1]) && (board[0][0] == board[2][2]) && (board[0][0] != Blank))
+    return board[0][0];
+  else if((board[2][0] == board[1][1]) && (board[2][0] == board[0][2]) && (board[2][0] != Blank))
+    return board[2][0];
+
+  else
+  {
+    //checks if game is over
+    for(int i=0; i<BOARDSIZE; i++)
+      for(int j=0; j<BOARDSIZE; j++)
+        if(board[i][j] == Blank)
+          return Invalid;
+          
+    //game is done and no winner
+    return Blank;
+  }
 }
